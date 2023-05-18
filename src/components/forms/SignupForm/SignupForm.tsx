@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { Field, FieldProps, Form, Formik } from "formik";
 import * as Yup from "yup";
+import { createUser } from "@api/users";
 
 interface FormValues {
   email: string;
@@ -43,11 +44,25 @@ const SignupForm = () => {
               .required("Password confirmation is required")
               .oneOf([Yup.ref("password")], "Passwords must match"),
           })}
-          onSubmit={(values: FormValues, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2));
-              setSubmitting(false);
-            }, 400);
+          onSubmit={async (values: FormValues, { setSubmitting }) => {
+            const response = await createUser(
+              values.email,
+              values.username,
+              values.password
+            );
+
+            if (!response) {
+              alert("No response from server.");
+              return;
+            }
+
+            if (response.status != 201) {
+              alert(`Error ${response.status}: ${response.statusText}`);
+            } else {
+              alert(`User ${response.data.user.username} created.`);
+            }
+
+            setSubmitting(false);
           }}
         >
           <Form>
