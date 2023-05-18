@@ -1,11 +1,9 @@
-import { Button } from "@chakra-ui/react";
-import Example from "@components/example";
+import SignupForm from "@components/forms/SignupForm/SignupForm";
 
 function App() {
   return (
     <div>
-      <Example />
-      <Button>Button</Button>
+      <SignupForm />
     </div>
   );
 }
